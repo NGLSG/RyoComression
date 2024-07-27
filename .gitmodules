@@ -1,0 +1,6 @@
+[submodule "Library/libarchive"]
+	path = Library/libarchive
+	url = https://github.com/libarchive/libarchive.git
+[submodule "Library/zlib"]
+	path = Library/zlib
+	url = https://github.com/madler/zlib.git
