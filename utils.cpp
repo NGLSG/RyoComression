@@ -76,6 +76,10 @@ namespace RC {
     }
 
     std::vector<std::string> Utils::Directory::List(const std::string&path) {
+        if (!Exists(path)) {
+            std::cerr << "Directory does not exist: " << path << std::endl;
+            return {};
+        }
         std::vector<std::string> files;
         for (const auto&file: std::filesystem::directory_iterator(path)) {
             files.push_back(file.path().string());
