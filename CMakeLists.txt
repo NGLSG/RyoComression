@@ -18,4 +18,9 @@ target_link_libraries(RyoCompress-static PUBLIC archive minizip lib)
 target_include_directories(RyoCompress-static PUBLIC .)
 target_precompile_headers(RyoCompress-static PRIVATE Header.h)
 
+add_library(RyoCompress-shared SHARED ${src} ${header})
+target_link_libraries(RyoCompress-shared PUBLIC archive minizip lib)
+target_include_directories(RyoCompress-shared PUBLIC .)
+target_precompile_headers(RyoCompress-shared PRIVATE Header.h)
+
 add_library(RyoCompress ALIAS RyoCompress-static)
