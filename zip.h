@@ -12,11 +12,11 @@ namespace RC {
 
         static bool Extract(const std::string&filePath, const std::string&outputPath, const std::string&pwd = "");
 
-        static bool Compress(const std::string&filePath, const std::string&outputPath, int level,
+        static bool Compress(const std::string&filePath, const std::string&outputPath, int level = 1,
                              const std::string&pwd = "", long split = 1);
 
         static bool Compress(std::vector<std::string> files, const std::string&outPath, const std::string&pwd = "",
-                             int level, long split = 1);
+                             int level = 1, long split = 1);
 
         static bool ExtractSelectedFile(const std::string&filePath, const std::string&selectedFile,
                                         const std::string&outputPath, const std::string&pwd = "");

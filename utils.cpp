@@ -107,8 +107,34 @@ namespace RC {
     }
 
     bool Utils::Directory::Copy(const std::string&source, const std::string&destination) {
-        std::filesystem::copy_file(source, destination, std::filesystem::copy_options::overwrite_existing);
-        return true;
+        // 检查源目录是否存在
+        if (!Exists(source)) {
+            std::cerr << "Source directory does not exist" << std::endl;
+            return false;
+        }
+        if (!IsDirectory(source)) {
+            return File::Copy(source, destination);
+        }
+
+        // 确保目标目录存在
+        Create(destination);
+
+        // 遍历源目录下的所有条目
+        for (const auto&entry: std::filesystem::recursive_directory_iterator(source)) {
+            // 获取源路径和目标路径
+            std::filesystem::path src = entry.path();
+            std::filesystem::path dest = destination / src.filename();
+
+            // 检查条目的类型并相应地复制
+            if (std::filesystem::is_directory(src)) {
+                // 如果是目录，则递归创建目标目录
+                std::filesystem::create_directories(dest);
+            }
+            else {
+                // 如果是文件，则复制文件
+                std::filesystem::copy(src, dest, std::filesystem::copy_options::overwrite_existing);
+            }
+        }
     }
 
     void Utils::Directory::Move(const std::string&source, const std::string&destination) {
@@ -142,11 +168,6 @@ namespace RC {
             return false;
         }
         archive_entry* entry;
-        r = archive_read_next_header(a, &entry);
-        if (r != ARCHIVE_OK) {
-            std::cerr << "Failed to open archive: " << filePath << " due to: " << archive_error_string(a) << std::endl;
-            return false;
-        }
 
         while (archive_read_next_header(a, &entry) == ARCHIVE_OK) {
             const char* current_file = archive_entry_pathname(entry);

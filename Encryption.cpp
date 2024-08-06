@@ -98,7 +98,6 @@ namespace Encryption {
             outfile.write(reinterpret_cast<char *>(&decryptedData[0]), len + flags);
             outfile.close();
             if (delAfter) {
-                // 假设 RC::Utils::File::Remove 是一个有效的文件删除函数
                 RC::Utils::File::Remove(inputPath);
             }
         }
