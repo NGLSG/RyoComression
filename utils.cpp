@@ -194,7 +194,6 @@ namespace RC {
             return false;
         }
 
-
         // 添加文件或文件夹到归档
         if (!add_file_to_archive(a, filePath, filePath)) {
             archive_write_close(a);
@@ -207,6 +206,33 @@ namespace RC {
             return false;
         }
 
+        return true;
+    }
+
+    bool Utils::impl_Compress::impl_compress(archive* a, std::vector<std::string> files, const std::string&outPath,
+                                             int level, long split) {
+        // 设置压缩级别
+        if (level >= 0) {
+            archive_write_set_options(a, ("compression-level=" + std::to_string(level)).c_str());
+        } // 设置分卷大小（如果需要）
+        if (split > 0) {
+            archive_write_set_bytes_in_last_block(a, split);
+        }
+        if (archive_write_open_filename(a, outPath.c_str()) != ARCHIVE_OK) {
+            std::cerr << "Failed to open output archive: " << outPath << " dut to:" << archive_error_string(a) <<
+                    std::endl;
+            return false;
+        }
+        for (const auto&file: files) {
+            if (!add_file_to_archive(a, file, "./")) {
+                archive_write_close(a);
+                return false;
+            }
+        }
+        if (archive_write_close(a) != ARCHIVE_OK) {
+            std::cerr << "Failed to close output archive: " << outPath << std::endl;
+            return false;
+        }
         return true;
     }
 
@@ -285,13 +311,13 @@ namespace RC {
         return false;
     }
 
+
     bool Utils::impl_Compress::add_file_to_archive(archive* a, std::string path, const std::string&basePath) {
         // 检查路径是否存在
         if (!Utils::File::Exists(path) && !Utils::Directory::Exists(path)) {
             std::cerr << "Path does not exist: " << path << std::endl;
             return false;
         }
-
 
         // 如果是目录，递归添加其内容
         if (Utils::Directory::IsDirectory(path)) {

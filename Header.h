@@ -1,8 +1,11 @@
 #ifndef HEADER_H
 #define HEADER_H
-#include <archive.h>
-#include <archive_entry.h>
+#ifndef NOCRYPT
+#define NOCRYPT
+#endif
 #include <vector>
 #include <string>
+#include <archive.h>
+#include <archive_entry.h>
 #include "utils.h"
 #endif //HEADER_H

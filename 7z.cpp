@@ -23,6 +23,11 @@ namespace RC {
         return false;
     }
 
+    bool c7z::Compress(std::vector<std::string> files, const std::string& outPath, int level, long split) {
+        std::cout << "7z not support" << std::endl;
+        return false;
+    }
+
     bool c7z::ExtractSelectedFile(const std::string&filePath, const std::string&selectedFile,
                                   const std::string&outputPath) {
         archive* a = archive_read_new();

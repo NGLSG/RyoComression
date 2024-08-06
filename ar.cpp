@@ -1,5 +1,7 @@
 #include "ar.h"
 
+#include "utils.h"
+
 namespace RC {
     std::vector<std::string> ar::List(const std::string&filePath) {
         archive* a = archive_read_new();
@@ -17,6 +19,12 @@ namespace RC {
         archive* a = archive_write_new();
         archive_write_set_format_ar_bsd(a);
         return Utils::impl_Compress::impl_compress(a, filePath, outputPath, level);
+    }
+
+    bool ar::Compress(std::vector<std::string> files, const std::string&outPath, int level, long split) {
+        archive* a = archive_write_new();
+        archive_write_set_format_ar_bsd(a);
+        return Utils::impl_Compress::impl_compress(a, files, outPath, level, split);
     }
 
     bool ar::ExtractSelectedFile(const std::string&filePath, const std::string&selectedFile,

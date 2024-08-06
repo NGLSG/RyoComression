@@ -3,13 +3,24 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+
 #include <archive.h>
 #include <archive_entry.h>
+#include "Encryption.h"
 
+#ifdef min
+#undef min
+#define min(a,b) ((a) < (b) ? (a) : (b))
+#endif
+#ifdef max
+#undef max
+#define max(a,b) ((a) > (b) ? (a) : (b))
+#endif
 namespace RC {
     class Utils {
     public :
         static void sleep(int milliseconds);
+
         class File {
         public :
             static bool Exists(const std::string&path);
@@ -67,6 +78,10 @@ namespace RC {
 
             static bool impl_compress(archive* a, const std::string&filePath, const std::string&outputPath,
                                       int level, int split = 0);
+
+            static bool impl_compress(archive*, std::vector<std::string> files, const std::string&outPath, int level,
+                                      long split = 1);
+
 
             static bool impl_extractSelectedFile(archive* a, const std::string&filePath, const std::string&selectedFile,
                                                  const std::string&outputPath);

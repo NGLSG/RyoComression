@@ -1,4 +1,5 @@
 #include "bzip.h"
+#include "utils.h"
 
 namespace RC {
     std::vector<std::string> bzip::List(const std::string&filePath) {
@@ -20,6 +21,13 @@ namespace RC {
         archive_write_add_filter_bzip2(a);
         archive_write_set_format_zip(a);
         return Utils::impl_Compress::impl_compress(a, filePath, outputPath, level);
+    }
+
+    bool bzip::Compress(std::vector<std::string> files, const std::string&outPath, int level, long split) {
+        archive* a = archive_write_new();
+        archive_write_add_filter_bzip2(a);
+        archive_write_set_format_zip(a);
+        return Utils::impl_Compress::impl_compress(a, files, outPath, level, split);
     }
 
     bool bzip::ExtractSelectedFile(const std::string&filePath, const std::string&selectedFile,

@@ -1,5 +1,5 @@
 #include "rar.h"
-
+#include "utils.h"
 namespace RC {
     std::vector<std::string> rar::List(const std::string&filePath) {
         archive* a = archive_read_new();
@@ -16,6 +16,11 @@ namespace RC {
     }
 
     bool rar::Compress(const std::string&filePath, const std::string&outputPath, int level) {
+        std::cout << "Unsupported format: RAR" << std::endl;
+        return false;
+    }
+
+    bool rar::Compress(std::vector<std::string> files, const std::string& outPath, int level, long split) {
         std::cout << "Unsupported format: RAR" << std::endl;
         return false;
     }

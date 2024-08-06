@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.28)
 
-# 添加第三方库的子目录
 add_subdirectory(libarchive)
 add_subdirectory(zlib)
-# 创建一个 INTERFACE 库
+add_subdirectory(boringssl)
+
 add_library(lib INTERFACE)
-# 为目标 lib 添加包含目录
+
 file(GLOB msrc
         zlib/contrib/minizip/*.c
 )

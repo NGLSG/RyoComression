@@ -1,7 +1,6 @@
 #ifndef COMPRESS_H
 #define COMPRESS_H
 
-
 #include <string>
 #include <vector>
 #include <map>
@@ -18,6 +17,24 @@ namespace RC {
         Split_16G = 16384,
     };
 
+    enum Type {
+        ZIP = 0,
+        RAR = 1,
+        TAR = 2,
+        TAR_GZ = 3,
+        TAR_BZ2 = 4,
+        TAR_XZ = 5,
+        TAR_LZMA = 6,
+        TAR_LZIP = 7,
+        TAR_LZMA2 = 8,
+        TAR_LZ4 = 10,
+        TAR_ZSTD = 11,
+        ZIPX = 12,
+        AR,
+        XAR,
+        Count
+    };
+
     class Compression {
     public :
         inline const static std::map<SplitSize, long> SplitMap = {
@@ -31,17 +48,26 @@ namespace RC {
             {Split_16G, 16 * 1024 * 1024 * 1024},
         };
 
-        static std::vector<std::string> List(const std::string&file, const std::string&pwd = "");
+        static std::vector<std::string> List(const std::string&file, const Type&type = Count,
+                                             const std::string&pwd = "");
 
-        static bool Extract(const std::string&file, const std::string&dest, const std::string&pwd = "");
+        static bool Extract(const std::string&file, const std::string&dest, const Type&type = Count,
+                            const std::string&pwd = "");
 
         static bool ExtractSelectedFile(const std::string&filePath, const std::string&selectedFile,
-                                        const std::string&outputPath, const std::string&pwd = "");
+                                        const std::string&outputPath, const Type&type = Count,
+                                        const std::string&pwd = "");
 
-        static bool Compress(const std::string&filePath, const std::string&outputPath, int level = 1,
+        static bool Compress(const std::string&filePath, const std::string&outputPath, const Type&type = Count,
+                             int level = 1,
+                             const std::string&password = "", long split = 1);
+
+        static bool Compress( std::vector<std::string> files, const std::string&outputPath, const Type&type = Count,
+                             int level = 1,
                              const std::string&password = "", long split = 1);
 
         static bool MergeParts(const std::string&outputZipPath, const std::string&destPath = "",
+                               const Type&type = Count,
                                const std::string&pwd = "");
     };
 }

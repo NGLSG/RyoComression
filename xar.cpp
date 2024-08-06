@@ -1,8 +1,5 @@
-//
-// Created by 92703 on 2024/7/26.
-//
-
 #include "xar.h"
+#include "utils.h"
 
 namespace RC {
     std::vector<std::string> xar::List(const std::string&filePath) {
@@ -37,6 +34,17 @@ namespace RC {
             return false;
         }
         return Utils::impl_Compress::impl_compress(a, filePath, outputPath, level);
+    }
+
+    bool xar::Compress(std::vector<std::string> files, const std::string&outPath, int level, long split) {
+        archive* a = archive_write_new();
+        int r = archive_write_set_format_xar(a);
+        if (r != ARCHIVE_OK) {
+            std::cerr << "set format error:" << archive_error_string(a) << std::endl;
+            archive_write_free(a);
+            return false;
+        }
+        return Utils::impl_Compress::impl_compress(a, files, outPath, level, split);
     }
 
     bool xar::ExtractSelectedFile(const std::string&filePath, const std::string&selectedFile,

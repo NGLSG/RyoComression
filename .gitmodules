@@ -4,3 +4,6 @@
 [submodule "Library/zlib"]
 	path = Library/zlib
 	url = https://github.com/madler/zlib.git
+[submodule "Library/boringssl"]
+	path = Library/boringssl
+	url = https://boringssl.googlesource.com/boringssl

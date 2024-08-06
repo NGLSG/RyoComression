@@ -15,6 +15,9 @@ namespace RC {
         static bool Compress(const std::string&filePath, const std::string&outputPath, int level,
                              const std::string&pwd = "", long split = 1);
 
+        static bool Compress(std::vector<std::string> files, const std::string&outPath, const std::string&pwd = "",
+                             int level, long split = 1);
+
         static bool ExtractSelectedFile(const std::string&filePath, const std::string&selectedFile,
                                         const std::string&outputPath, const std::string&pwd = "");
 
@@ -22,7 +25,6 @@ namespace RC {
                                const std::string&destPath, const std::string&pwd = "");
 
     private:
-
         static bool tryPwd(const std::string&filePath, const std::string&pwd);
 
         static bool zipExtractSingle(const std::string&filePath, const std::string&outputPath,

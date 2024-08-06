@@ -1,6 +1,7 @@
 #include "zip.h"
 
 #include <functional>
+#include "utils.h"
 
 namespace RC {
     std::vector<std::string> zip::List(const std::string&filePath, const std::string&pwd) {
@@ -102,6 +103,61 @@ namespace RC {
                 return false;
             }
 
+            zipClose(zipFile, nullptr);
+            return true;
+        }
+    }
+
+    bool zip::Compress(std::vector<std::string> files, const std::string&outPath, const std::string&pwd, int level,
+                       long split) {
+        if (split >= 1024 * 1024) {
+            std::string baseName = outPath.substr(0, outPath.find_last_of('.'));
+            std::string extension = outPath.substr(outPath.find_last_of('.'));
+            int volumeNumber = 0;
+            zipFile zipFile = nullptr;
+            uint64_t currentVolumeSize = 0;
+
+            auto openNewVolume = [&]() -> bool {
+                if (zipFile) {
+                    zipClose(zipFile, nullptr);
+                }
+                std::string volumePath = baseName + "." + std::to_string(volumeNumber++) + extension;
+                zipFile = zipOpen2(volumePath.c_str(), APPEND_STATUS_CREATE, nullptr, nullptr);
+                if (zipFile == nullptr) {
+                    std::cerr << "Failed to open output zip file: " << volumePath << std::endl;
+                    return false;
+                }
+                currentVolumeSize = 0;
+                return true;
+            };
+
+            if (!openNewVolume()) {
+                return false;
+            }
+            for (const auto&file: files) {
+                if (!addPathToZip(zipFile, file, std::filesystem::path(file).filename().string(), pwd, level,
+                                  currentVolumeSize, split, openNewVolume)) {
+                    zipClose(zipFile, nullptr);
+                    return false;
+                }
+            }
+            zipClose(zipFile, nullptr);
+            return true;
+        }
+        else {
+            uint64_t currentVolumeSize = 0;
+            auto openNewVolume = []() -> bool { return true; };
+            auto zipFile = zipOpen(outPath.c_str(), APPEND_STATUS_CREATE);
+            if (zipFile == nullptr) {
+                std::cerr << "Failed to open output zip file: " << outPath << std::endl;
+                return false;
+            }
+            for (const auto&file: files) {
+                if (!addPathToZip(zipFile, file, "", pwd, level, currentVolumeSize, split, openNewVolume)) {
+                    zipClose(zipFile, nullptr);
+                    return false;
+                }
+            }
             zipClose(zipFile, nullptr);
             return true;
         }
@@ -504,7 +560,12 @@ namespace RC {
 
         while (fileSize > 0) {
             uint64_t remainingSize = splitSize - currentVolumeSize;
+#ifdef _MSC_VER
             uint64_t bytesToWrite = min(fileSize, remainingSize);
+#else
+            uint64_t bytesToWrite = std::min(fileSize, remainingSize);
+#endif
+
 
             zip_fileinfo fileInfo = {};
             if (zipOpenNewFileInZip3(zipFile, relativePath.c_str(), &fileInfo, nullptr, 0, nullptr, 0, nullptr,

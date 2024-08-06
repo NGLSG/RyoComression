@@ -1,4 +1,5 @@
 #include "tar.h"
+#include "utils.h"
 
 namespace RC {
     std::vector<std::string> tar::List(const std::string&filePath) {
@@ -17,6 +18,12 @@ namespace RC {
         archive* a = archive_write_new();
         archive_write_set_format_pax_restricted(a);
         return Utils::impl_Compress::impl_compress(a, filePath, outputPath, level);
+    }
+
+    bool tar::Compress(std::vector<std::string> files, const std::string&outPath, int level, long split) {
+        archive* a = archive_write_new();
+        archive_write_set_format_pax_restricted(a);
+        return Utils::impl_Compress::impl_compress(a, files, outPath, level, split);
     }
 
     bool tar::ExtractSelectedFile(const std::string&filePath, const std::string&selectedFile,
