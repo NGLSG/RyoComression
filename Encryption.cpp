@@ -41,7 +41,8 @@ namespace Encryption {
             outfile.write(reinterpret_cast<char *>(&encryptedData[0]), len + flags);
             outfile.close();
             if (delAfter)
-                RC::Utils::File::Remove(Path);
+                if (RC::Utils::File::Exists(Path))
+                    RC::Utils::File::Remove(Path);
         }
         else {
             std::cerr << "Unable to open output file." << std::endl;
@@ -51,8 +52,8 @@ namespace Encryption {
         EVP_CIPHER_CTX_free(ctx);
     }
 
-    void AES::Decrypt(const std::string& inputPath, const std::string& password, const std::string& iv,
-        const std::string& outputPath, bool delAfter) {
+    void AES::Decrypt(const std::string&inputPath, const std::string&password, const std::string&iv,
+                      const std::string&outputPath, bool delAfter) {
         const std::string key = password;
 
         // 创建EVP_CIPHER_CTX
@@ -98,7 +99,8 @@ namespace Encryption {
             outfile.write(reinterpret_cast<char *>(&decryptedData[0]), len + flags);
             outfile.close();
             if (delAfter) {
-                RC::Utils::File::Remove(inputPath);
+                if (RC::Utils::File::Exists(inputPath))
+                    RC::Utils::File::Remove(inputPath);
             }
         }
         else {
