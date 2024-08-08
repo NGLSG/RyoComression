@@ -205,7 +205,7 @@ namespace RC {
         if (level >= 0) {
             archive_write_set_options(a, ("compression-level=" + std::to_string(level)).c_str());
         } // 设置分卷大小（如果需要）
-        if (split > 0) {
+        if (split > 1024 * 1024) {
             archive_write_set_bytes_in_last_block(a, split);
         }
         // 打开输出归档文件
@@ -236,7 +236,7 @@ namespace RC {
         if (level >= 0) {
             archive_write_set_options(a, ("compression-level=" + std::to_string(level)).c_str());
         } // 设置分卷大小（如果需要）
-        if (split > 0) {
+        if (split > 1024 * 1024) {
             archive_write_set_bytes_in_last_block(a, split);
         }
         if (archive_write_open_filename(a, outPath.c_str()) != ARCHIVE_OK) {
@@ -247,6 +247,7 @@ namespace RC {
         for (const auto&file: files) {
             if (!add_file_to_archive(a, file, "./")) {
                 archive_write_close(a);
+                std::cerr << "Failed to add file to archive: " << file << std::endl;
                 return false;
             }
         }
@@ -344,6 +345,7 @@ namespace RC {
         if (Utils::Directory::IsDirectory(path)) {
             for (const auto&entry: Utils::Directory::List(path)) {
                 if (!add_file_to_archive(a, entry, basePath)) {
+                    std::cerr << "Failed to add file to archive: " << entry << std::endl;
                     return false;
                 }
             }
