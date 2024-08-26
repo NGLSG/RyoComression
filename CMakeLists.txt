@@ -11,10 +11,10 @@ file(GLOB header
         EXCLUDE Header.h
 )
 add_subdirectory(Library)
-set(Links minizip lib ssl crypto)
+set(Links minizip lib ssl crypto archive)
 add_definitions(-DBORINGSSL_IMPLEMENTATION)
 add_library(RyoCompress SHARED STATIC ${src} ${header})
-target_link_libraries(RyoCompress PUBLIC ${Links} archive)
+target_link_libraries(RyoCompress PUBLIC ${Links})
 target_include_directories(RyoCompress PUBLIC .)
 target_precompile_headers(RyoCompress PRIVATE Header.h)
 
