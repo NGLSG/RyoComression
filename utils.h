@@ -1,5 +1,5 @@
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef RUTILS_H
+#define RUTILS_H
 #include <filesystem>
 #include <fstream>
 #include <iostream>

@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.28)
 set(name RyoCompress)
+set(CMAKE_CXX_STANDARD 17)
 project(${name})
 find_package(OpenSSL REQUIRED)
 file(GLOB src
