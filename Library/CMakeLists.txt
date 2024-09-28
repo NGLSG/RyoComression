@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.28)
 
 add_subdirectory(libarchive)
 add_subdirectory(zlib)
-add_subdirectory(boringssl)
-
 add_library(lib INTERFACE)
 
 file(GLOB msrc

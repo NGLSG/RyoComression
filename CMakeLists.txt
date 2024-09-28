@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.28)
 set(name RyoCompress)
 project(${name})
-
+find_package(OpenSSL REQUIRED)
 file(GLOB src
         *.cpp
 )
@@ -11,10 +11,10 @@ file(GLOB header
         EXCLUDE Header.h
 )
 add_subdirectory(Library)
-set(Links minizip lib ssl crypto archive)
+set(Links minizip lib archive)
 add_definitions(-DBORINGSSL_IMPLEMENTATION)
 add_library(RyoCompress SHARED STATIC ${src} ${header})
-target_link_libraries(RyoCompress PUBLIC ${Links})
+target_link_libraries(RyoCompress PUBLIC ${Links} OpenSSL::SSL OpenSSL::Crypto)
 target_include_directories(RyoCompress PUBLIC .)
 target_precompile_headers(RyoCompress PRIVATE Header.h)
 
