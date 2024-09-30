@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.28)
+cmake_minimum_required(VERSION 3.22)
 set(name RyoCompress)
 set(CMAKE_CXX_STANDARD 17)
 project(${name})
@@ -13,7 +13,6 @@ file(GLOB header
 )
 add_subdirectory(Library)
 set(Links minizip lib archive)
-add_definitions(-DBORINGSSL_IMPLEMENTATION)
 add_library(RyoCompress SHARED STATIC ${src} ${header})
 target_link_libraries(RyoCompress PUBLIC ${Links} OpenSSL::SSL OpenSSL::Crypto)
 target_include_directories(RyoCompress PUBLIC .)
