@@ -24,12 +24,12 @@ namespace Encryption {
         iv.resize(ivBytes);
 
         // Generate random key
-        if (!RAND_bytes(reinterpret_cast<unsigned char *>(key.data()), keyBytes)) {
+        if (!RAND_bytes(reinterpret_cast<unsigned char *>(const_cast<char *>(key.data())), keyBytes)) {
             throw std::runtime_error("Failed to generate random key");
         }
 
         // Generate random IV
-        if (!RAND_bytes(reinterpret_cast<unsigned char *>(iv.data()), ivBytes)) {
+        if (!RAND_bytes(reinterpret_cast<unsigned char *>(const_cast<char *>(iv.data())), ivBytes)) {
             throw std::runtime_error("Failed to generate random IV");
         }
 
